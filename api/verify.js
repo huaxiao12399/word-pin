@@ -10,7 +10,31 @@ function generateSessionToken() {
   return crypto.randomBytes(32).toString('hex');
 }
 
+// 验证会话令牌
+function verifySessionToken(token) {
+  return token && token.length === 64; // 简单的长度检查
+}
+
 export default async function handler(req, res) {
+  // 处理 GET 请求（检查登录状态）
+  if (req.method === 'GET') {
+    try {
+      const sessionToken = req.cookies?.authenticated;
+      if (!sessionToken || !verifySessionToken(sessionToken)) {
+        return res.status(401).json({ error: '未授权访问' });
+      }
+      return res.status(200).json({ success: true });
+    } catch (error) {
+      console.error('Auth Check Error:', {
+        message: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString()
+      });
+      return res.status(500).json({ error: '验证失败' });
+    }
+  }
+
+  // 处理 POST 请求（登录）
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
