@@ -6,6 +6,7 @@
     { "src": "/api/tts", "dest": "/api/tts" },
     { "src": "/api/verify", "dest": "/api/verify" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/login.html", "dest": "/login.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ]
 }
